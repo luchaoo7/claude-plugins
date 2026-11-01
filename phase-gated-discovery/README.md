@@ -34,9 +34,19 @@ Documents are sized to the project (Small / Medium / Large tier), and simplicity
 
 ### Claude Code
 
+From your terminal, without starting a session:
+
+```
+claude plugin marketplace add luchaoo7/claude-plugins
+claude plugin install phase-gated-discovery@luchaoo7-plugins
+```
+
+Or inside a session:
+
 ```
 /plugin marketplace add luchaoo7/claude-plugins
 /plugin install phase-gated-discovery@luchaoo7-plugins
+/reload-plugins
 ```
 
 ### Claude desktop app / claude.ai

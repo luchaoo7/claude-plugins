@@ -36,7 +36,7 @@ Documents are sized to the project (Small / Medium / Large tier), and simplicity
 
 ```
 /plugin marketplace add luchaoo7/claude-plugins
-/plugin install phase-gated-discovery@bestman-plugins
+/plugin install phase-gated-discovery@luchaoo7-plugins
 ```
 
 ### Claude desktop app / claude.ai

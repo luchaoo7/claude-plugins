@@ -1,0 +1,10 @@
+{
+  "name": "phase-gated-discovery",
+  "version": "0.1.0",
+  "description": "Phase-gated project discovery: takes an idea to approved PRD, MVP scope, lightweight TRD, UX flows and wireframes, design system and database schema, with a decision log and requirement traceability.",
+  "author": {
+    "name": "Daniel Brown"
+  },
+  "license": "MIT",
+  "keywords": ["planning", "prd", "mvp", "requirements", "architecture", "discovery"]
+}

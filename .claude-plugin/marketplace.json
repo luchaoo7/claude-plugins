@@ -6,8 +6,8 @@
   },
   "plugins": [
     {
-      "name": "phase-gated-discovery",
-      "source": "./phase-gated-discovery",
+      "name": "project-discovery",
+      "source": "./project-discovery",
       "description": "Phase-gated project discovery: takes an idea to approved PRD, MVP scope, lightweight TRD, UX flows and wireframes, design system and database schema, with a decision log and requirement traceability."
     }
   ]

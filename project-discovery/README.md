@@ -1,4 +1,4 @@
-# Phase-Gated Discovery
+# Project Discovery
 
 A Claude plugin that takes a software project from a raw idea to a set of approved planning documents you can build from — before any code is written.
 
@@ -38,14 +38,14 @@ From your terminal, without starting a session:
 
 ```
 claude plugin marketplace add luchaoo7/claude-plugins
-claude plugin install phase-gated-discovery@luchaoo7-plugins
+claude plugin install project-discovery@luchaoo7-plugins
 ```
 
 Or inside a session:
 
 ```
 /plugin marketplace add luchaoo7/claude-plugins
-/plugin install phase-gated-discovery@luchaoo7-plugins
+/plugin install project-discovery@luchaoo7-plugins
 /reload-plugins
 ```
 
@@ -65,7 +65,7 @@ Open a session in your project's repo and describe what you want to plan. The sk
 - "What should v1 include?"
 - "Design the database for my idea"
 
-In Claude Code you can also start it directly with `/phase-gated-discovery:project-discovery`.
+In Claude Code you can also start it directly with `/project-discovery:plan`.
 
 ### Moving through the phases
 

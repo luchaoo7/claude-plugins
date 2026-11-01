@@ -1,5 +1,5 @@
 ---
-name: project-discovery
+name: plan
 description: Run a phase-gated discovery-to-delivery workflow for a new software project, producing PRD, MVP scope, a lightweight MVP-focused TRD, UX (user flows and low-fidelity wireframes), design system, database schema, an optional low-level design for the complex parts and an optional stakeholder HLD summary as Markdown files in /docs, with a DECISIONS.md log and requirement traceability. Use this whenever someone wants to plan, scope, spec or kick off an app, product, feature set or side project before coding — even if they only say "help me plan my app", "I have an idea for…", "write a PRD", "what should v1 include", "design the database for my idea" or "where do I start" — and whenever they want to resume or change a project that already has these docs.
 ---
 

@@ -6,7 +6,7 @@ A collection of plugins for Claude, published as the `luchaoo7-plugins` marketpl
 
 | Plugin | Description |
 |--------|-------------|
-| [phase-gated-discovery](./phase-gated-discovery) | Takes a software project from a raw idea to approved planning documents — PRD, MVP scope, lightweight TRD, UX flows and wireframes, design system and database schema — with a decision log and requirement traceability. |
+| [project-discovery](./project-discovery) | Takes a software project from a raw idea to approved planning documents — PRD, MVP scope, lightweight TRD, UX flows and wireframes, design system and database schema — with a decision log and requirement traceability. |
 
 ## Installation
 

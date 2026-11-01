@@ -45,7 +45,9 @@ Add this repository as a plugin marketplace from the plugin settings, or downloa
 
 ## Usage
 
-Just describe what you want to plan. The skill triggers on things like:
+### Starting a project
+
+Open a session in your project's repo and describe what you want to plan. The skill triggers on things like:
 
 - "Help me plan my app"
 - "I have an idea for a booking tool for barbers"
@@ -53,7 +55,33 @@ Just describe what you want to plan. The skill triggers on things like:
 - "What should v1 include?"
 - "Design the database for my idea"
 
-To resume, open a session in a repo that already has a `docs/STATUS.md` and ask to continue — it picks up from the current phase without re-asking settled questions.
+In Claude Code you can also start it directly with `/phase-gated-discovery:project-discovery`.
+
+### Moving through the phases
+
+Claude asks a few questions, drafts the phase's document in `docs/`, then asks for a gate decision:
+
+- **Approve** — the document is marked approved, the decision is logged and the next phase starts.
+- **Request changes** — Claude revises the document and asks again.
+- **Discuss a section first** — talk it through before deciding.
+
+Open questions block a gate unless you explicitly accept them as a known risk.
+
+### Skipping a phase
+
+You can ask to skip a phase. Claude explains what it would have settled, then logs the decision and the risks in `docs/DECISIONS.md` and lists the assumptions it had to make in the next document. For projects without a user interface, the flows and design system phases are adapted or marked not applicable.
+
+### Changing an approved document
+
+Ask for the change at any point. Claude handles it as a deliberate change: the affected documents are updated, their version is bumped, and they return to approved only after you confirm.
+
+### Resuming later
+
+Open a session in a repo that already has a `docs/STATUS.md` and ask to continue — it picks up from the current phase without re-asking settled questions.
+
+### After the last gate
+
+You get a short close-out covering the documents produced, the decisions made, any accepted risks and the first build slice from `MVP.md`. Writing the code is outside this plugin.
 
 ## Roadmap
 

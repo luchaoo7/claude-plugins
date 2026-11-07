@@ -1,0 +1,10 @@
+{
+  "name": "vibe-code-auditor",
+  "version": "0.1.0",
+  "description": "Audits codebases (especially AI-generated / vibe-coded ones) for bloat, duplication, complexity, dead code, security risks and architecture weaknesses, then produces a prioritised consultant-grade report with before/after refactoring examples and applies only approved changes.",
+  "author": {
+    "name": "Daniel Brown"
+  },
+  "license": "MIT",
+  "keywords": ["code-review", "refactoring", "security", "architecture", "audit", "consulting", "vibe-coding"]
+}

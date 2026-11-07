@@ -9,6 +9,11 @@
       "name": "project-discovery",
       "source": "./project-discovery",
       "description": "Phase-gated discovery for new and existing software projects: takes an idea or codebase to approved PRD, MVP scope, lightweight TRD, UX flows and wireframes, design system and database schema, with a decision log and requirement traceability."
+    },
+    {
+      "name": "vibe-code-auditor",
+      "source": "./vibe-code-auditor",
+      "description": "Audits codebases (especially AI-generated / vibe-coded ones) for bloat, duplication, complexity, dead code, security risks and architecture weaknesses, then produces a prioritised report with before/after refactoring examples and applies only approved changes."
     }
   ]
 }

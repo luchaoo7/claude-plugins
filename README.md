@@ -7,6 +7,7 @@ A collection of plugins for Claude, published as the `luchaoo7-plugins` marketpl
 | Plugin | Description |
 |--------|-------------|
 | [project-discovery](./project-discovery) | Takes a new or existing software project to approved planning documents — PRD, MVP scope, lightweight TRD, UX flows and wireframes, design system and database schema — with a decision log and requirement traceability. |
+| [vibe-code-auditor](./vibe-code-auditor) | Audits codebases, especially AI-generated / vibe-coded ones, for bloat, duplication, dead code, complexity, security risks and architecture weaknesses, then produces a prioritised report with before/after refactoring examples and applies only the changes you approve. |
 
 ## Installation
 

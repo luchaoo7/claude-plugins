@@ -1,0 +1,54 @@
+{
+  "meta": {
+    "project": "Sample Portal",
+    "client": "Example Client Ltd",
+    "consultant": "Bestman",
+    "date": "2026-11-07",
+    "audience": "both",
+    "depth": "standard",
+    "scope": "React frontend and Express API. Excluded: node_modules, build output.",
+    "stacks": ["TypeScript / React 18", "Node / Express 4"],
+    "loc": 27,
+    "files": 3,
+    "executive_summary": "The codebase works but repeats the same API-calling logic in several places and stores the login token where any injected script can read it. Consolidating the API layer and moving the token to a secure cookie would cut duplicated code and close the main security gap.",
+    "architecture_summary": "Single-page React app calling an Express API. Each feature has its own hand-written API module; there is no shared client, error handling or typing for API responses.",
+    "scorecard": {"Security": "C", "Code quality": "C", "Duplication & dead code": "C", "Complexity": "A", "Architecture": "B", "Testing": "E"},
+    "themes": [{"title": "Consolidate API access", "summary": "Replace per-feature axios calls with one typed API client that handles auth and errors.", "finding_ids": ["VCA-001", "VCA-002"]}],
+    "limitations": ["Static review only; no code was executed.", "Backend auth configuration outside the repository was not reviewed."]
+  },
+  "findings": [
+    {
+      "id": "VCA-001", "title": "Duplicated API fetch logic across feature modules", "category": "duplication",
+      "severity": "medium", "confidence": "high", "effort": "S", "phase": "quick-win",
+      "location": {"file": "src/api/users.ts", "start_line": 3, "end_line": 12, "symbol": "fetch_users"},
+      "additional_locations": [{"file": "src/api/orders.ts", "start_line": 3, "end_line": 12}],
+      "description": "fetch_users and fetch_orders are identical apart from the resource name.",
+      "why_it_matters": "Every fix to auth, error handling or date parsing must be repeated per module; they will drift.",
+      "recommendation": "Introduce one generic getPage<T>(resource, id) helper in src/api/client.ts and delete the copies.",
+      "before": "export async function fetch_users(id: string) {\n  const token = localStorage.getItem('token');\n  const res = await axios.get('/api/users/' + id, { headers: { Authorization: 'Bearer ' + token } });\n  if (res.status !== 200) {\n    console.log('failed');\n    return null;\n  }\n  ...",
+      "after": "// src/api/client.ts\nconst api = axios.create({ baseURL: '/api', withCredentials: true });\n\nexport async function getPage<T>(resource: string, id: string): Promise<Page<T>> {\n  const { data } = await api.get<RawPage<T>>(`/${resource}/${id}`);\n  return { total: data.total, items: data.items.map(parseDates) };\n}",
+      "language": "typescript", "status": "open"
+    },
+    {
+      "id": "VCA-002", "title": "Auth token stored in localStorage", "category": "security",
+      "severity": "high", "confidence": "high", "effort": "M", "phase": "short-term",
+      "location": {"file": "src/api/users.ts", "start_line": 4, "end_line": 4},
+      "description": "The bearer token is read from localStorage on every request.",
+      "why_it_matters": "Any XSS flaw lets an attacker read and exfiltrate the token and impersonate the user.",
+      "recommendation": "Issue the session as an HttpOnly, Secure, SameSite cookie from the API and send requests with credentials.",
+      "before": "const token = localStorage.getItem('token');",
+      "after": "// server: res.cookie('session', token, { httpOnly: true, secure: true, sameSite: 'lax' });\n// client: axios.create({ withCredentials: true })",
+      "cwe": "CWE-922", "owasp": "A07:2021-Identification and Authentication Failures",
+      "references": ["https://cwe.mitre.org/data/definitions/922.html"], "status": "open"
+    },
+    {
+      "id": "VCA-003", "title": "Failed requests are logged and silently return null", "category": "maintainability",
+      "severity": "low", "confidence": "high", "effort": "S",
+      "location": {"file": "src/api/orders.ts", "start_line": 6, "end_line": 9},
+      "description": "Non-200 responses log 'failed' and return null; callers cannot distinguish 'not found' from errors.",
+      "why_it_matters": "Hides outages and produces confusing empty UI states.",
+      "recommendation": "Let errors propagate to a single error handler in the shared client.",
+      "status": "open"
+    }
+  ]
+}

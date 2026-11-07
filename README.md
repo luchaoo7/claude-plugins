@@ -30,6 +30,25 @@ Or inside a session:
 /reload-plugins
 ```
 
+#### Updating
+
+To pick up new plugins and new versions, refresh the marketplace and then update the plugins you have installed.
+
+From your terminal:
+
+```
+claude plugin marketplace update luchaoo7-plugins
+claude plugin update <plugin-name>@luchaoo7-plugins
+```
+
+Or inside a session:
+
+```
+/plugin marketplace update luchaoo7-plugins
+/plugin update <plugin-name>@luchaoo7-plugins
+/reload-plugins
+```
+
 ### Claude desktop app / claude.ai
 
 Add this repository as a plugin marketplace from the plugin settings, or download a plugin's folder and upload it.

@@ -69,7 +69,7 @@ In Claude Code you can also start it directly with `/project-discovery:plan`.
 
 ### Using it on an existing project
 
-Open a session in the repo and say something like "document this codebase" or "plan a new feature for this app". Claude reads the code first, then asks whether you want to document what exists, plan new work on it, or both.
+There's no separate command. Open a session in the project's repo and run `/project-discovery:plan`, or just say something like "document this codebase" or "plan a new feature for this app". The skill sees the code and switches to existing-project mode on its own. Claude reads the code first, then asks whether you want to document what exists, plan new work on it, or both, unless your message already said which.
 
 - **Same documents, same gates** — but they record the system as it is, and approving one means it's accurate.
 - **Claude only writes to `docs/`** — it doesn't change your code, and it won't overwrite existing files in `docs/` it didn't write. It doesn't open secrets or connect to live databases.

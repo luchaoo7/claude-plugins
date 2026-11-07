@@ -16,6 +16,7 @@ Contents
 11. STATUS.md
 12. LLD.md (optional)
 13. HLD.md (on request)
+14. Existing-project additions
 
 ---
 
@@ -323,7 +324,7 @@ Constraints:
 - Date: YYYY-MM-DD
 - Phase: Discovery / PRD / MVP / TRD / User Flow / Design System / Schema
 - Type: product / technical / scope / gate / risk-acceptance / process
-- Origin: developer / recommendation-accepted / recommendation-overridden
+- Origin: developer / recommendation-accepted / recommendation-overridden / existing
 - Options considered: A) … B) … C) …
 - Decision: …
 - Rationale: … (developer's words where given; otherwise Claude's stated rationale, noted as "accepted without further comment")
@@ -453,3 +454,50 @@ Generated from: PRD v<x>, MVP v<x>, TRD v<x>, SCHEMA v<x> on YYYY-MM-DD. Do not 
 ## Out of scope for v1 and future direction
 ## Source documents
 ```
+
+---
+
+## 14. Existing-project additions
+
+Add these to the templates above when the project already has code.
+
+**Every phase document**: add a `Basis` row to the header (`As-built` / `Proposed` / `As-built + proposed`), label statements about the current system `[code]` (with file path), `[inferred]` or `[confirmed]`, and end with:
+
+```markdown
+## Findings
+### FND-01 — <short title>
+- Evidence: <file paths, or what disagrees with what>
+- Impact: …
+- Status: open / fix later (change request) / accepted (D-0xx) / resolved
+```
+
+**DISCOVERY.md**: add after the idea section:
+
+```markdown
+## Mode
+Document what exists / Plan new work / Both — D-0xx
+## Code survey
+Stack and versions · structure · routes and APIs · screens · data · integrations · tests · CI and deployment · existing docs · git history
+Coverage: <what was read in full, what was sampled, what wasn't read>
+```
+
+**MVP.md**: add a `State` column (`shipped` / `partial` / `not built`) to the requirement classification and to user stories.
+
+**TRACEABILITY.md**: use `shipped`, `partial`, `not built` or `proposed` in the Status column.
+
+**STATUS.md**: add under Summary:
+
+```markdown
+Mode: Document what exists / Plan new work / Both
+Scope: <whole repo, or the areas and paths covered>
+Baseline commit: <short hash the as-built docs describe>
+## Open findings
+FND-01 <title> (<document>) · FND-02 <title> (<document>)
+```
+
+**Exit checklist additions** (every as-built document)
+- [ ] Statements about the current system are labelled, and `[code]` labels have a file path
+- [ ] Spot-checked against the code before presenting; nothing describes behaviour that wasn't seen
+- [ ] Unknown rationale is written as unknown, not invented
+- [ ] Disagreements between code, documents and the developer are recorded as findings
+- [ ] No application code was changed

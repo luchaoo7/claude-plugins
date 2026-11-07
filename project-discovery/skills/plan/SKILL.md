@@ -1,6 +1,6 @@
 ---
 name: plan
-description: Run a phase-gated discovery-to-delivery workflow for a new software project, producing PRD, MVP scope, a lightweight MVP-focused TRD, UX (user flows and low-fidelity wireframes), design system, database schema, an optional low-level design for the complex parts and an optional stakeholder HLD summary as Markdown files in /docs, with a DECISIONS.md log and requirement traceability. Use this whenever someone wants to plan, scope, spec or kick off an app, product, feature set or side project before coding — even if they only say "help me plan my app", "I have an idea for…", "write a PRD", "what should v1 include", "design the database for my idea" or "where do I start" — and whenever they want to resume or change a project that already has these docs.
+description: Run a phase-gated discovery-to-delivery workflow for a new or existing software project, producing PRD, MVP scope, a lightweight MVP-focused TRD, UX (user flows and low-fidelity wireframes), design system, database schema, an optional low-level design for the complex parts and an optional stakeholder HLD summary as Markdown files in /docs, with a DECISIONS.md log and requirement traceability. Use this whenever someone wants to plan, scope, spec or kick off an app, product, feature set or side project before coding — even if they only say "help me plan my app", "I have an idea for…", "write a PRD", "what should v1 include", "design the database for my idea" or "where do I start" — when they want to document an existing codebase or plan new work on one, such as "document this codebase" or "write a PRD for my existing app" — and whenever they want to resume or change a project that already has these docs.
 ---
 
 # Project Discovery (phase-gated)
@@ -10,6 +10,8 @@ This skill takes a project from a raw idea to a set of approved planning documen
 1. **Hard phase gates** — each document must be explicitly approved before the next phase starts.
 2. **A decision log** — every material choice is recorded in `docs/DECISIONS.md`, whether the developer chose it or accepted (or overrode) a recommendation.
 3. **Traceability** — every requirement gets an ID, and everything downstream (components, stories, screens, tables) points back to one. Anything that can't is either justified or cut.
+
+Projects that already have code use the same phases and mechanisms, with the documents recording what exists instead of designing it from scratch (see "Existing projects").
 
 The developer stays accountable: Claude recommends, explains trade-offs and writes the documents, but the developer makes and owns every decision.
 
@@ -46,9 +48,59 @@ First look for an existing `docs/` folder (in the working directory, or files th
 
 - **STATUS.md exists** → read it, DECISIONS.md and the latest approved docs, then summarise in two or three lines where the project stands and continue from the current phase. Don't restart discovery or re-ask settled questions.
 - **Some docs but no STATUS.md** → treat them as drafts: read them, reconstruct STATUS.md, and ask the developer to confirm which are actually approved.
-- **Nothing exists** → start Phase 0.
+- **Nothing exists** → check for code. A repo with real application code is an existing project (see "Existing projects"); an empty repo, or one holding only a README or an untouched framework scaffold, starts Phase 0.
+
+If the repo has code as well as documents this workflow didn't write, such as a README, wiki pages or an old spec, treat those documents as evidence in existing-project mode rather than as drafts.
 
 If there is no filesystem (a plain chat), produce each document in the conversation instead and keep the same structure; tell the developer once that the files are meant to live in `/docs` in their repo.
+
+## Existing projects
+
+When the project already has code, the documents must match it. A tidy plan that disagrees with the code is worse than no plan, so read the code before writing anything, and don't ask the developer what the code can tell you.
+
+**1. Ask what they want**, unless they've already said. In a monorepo, also ask which part is in scope. Log the choice as a decision and record the mode in STATUS.md.
+
+- **Document what exists** — every phase records the current system as-built.
+- **Plan new work on it** — document only the parts the work touches, then plan the new work on top.
+- **Both** — document the whole system, then plan the new work. Recommend this when the work is broad or the code is unfamiliar to the developer; recommend the second option when the change is small and contained.
+
+**2. Survey the code.** Before Phase 0, read what's there and summarise it for the developer: stack and versions, structure and entry points, routes and API endpoints, screens, styling, database schema and migrations, integrations, tests, CI and deployment config, existing documentation, and what the git history shows about age and recent activity. Scale the depth to the project, and for a large codebase, say which areas you sampled rather than read in full.
+
+Keep the survey read-only:
+
+- Write only to `docs/`. Never change application code, and never delete anything because a document suggests it's unused.
+- Don't overwrite a file in `docs/` this workflow didn't write. If a name is taken, ask the developer how to proceed.
+- Don't open secrets or real data: `.env` files, credentials, keys, database dumps. Record the names of configuration values, never their contents.
+- Don't connect to live services or databases, or run migrations. Use the schema files and migrations in the repo, and say so if they may not match production.
+
+**3. Label where each statement comes from.** In the phase documents, mark statements that describe the current system, and don't present a guess as a fact:
+
+- `[code]` — read directly from the code, with the file path.
+- `[inferred]` — a reasonable conclusion from the code, not yet confirmed.
+- `[confirmed]` — stated by the developer.
+
+Code shows what the system does, not why or whether it should. Purpose, users, business rules and priorities start as `[inferred]` at best; ask the developer about them, and leave the answer as an open question if they don't know. When code, documents and the developer disagree, record what each one says rather than picking a winner.
+
+**4. Record findings instead of fixing them.** A finding (`FND-01…`) is a place where the system disagrees with itself or its stated intent, or a problem the survey exposed: dead code, a documented feature that isn't built, a missing permission check, a schema that doesn't match its migrations. Put each finding in the document where it surfaced, with its evidence, and list the open ones in STATUS.md. A finding doesn't block a gate, because approving a document means it describes the system accurately, not that the system is right. The developer decides what happens to each one: fix it later (a change request), or accept it (a `risk-acceptance` decision).
+
+**5. Adapt the phases.** Gates, IDs, the exit checklists and proportionality still apply. Sections of a template that assume a future build, such as effort estimates, become `N/A — already built`. A phase with nothing to document, such as a database schema for an app with no database, is marked `not applicable`.
+
+| Phase | Documenting what exists |
+|---|---|
+| 0 Discovery | Starts from the survey. Ask only what code can't answer: users and scale, the problem, what's working and what isn't, and why they want the documents. Set the tier from the system as it is. |
+| 1 PRD | Reverse-engineer requirements from observed behaviour, each one labelled. Ask the developer to confirm intent, goals and business rules. |
+| 2 MVP Scope | Becomes a record of current scope: classify each story `shipped`, `partial` or `not built`, and each requirement the same way. Don't propose cuts to what's already live; anything not yet built goes on the Later list. |
+| 3 TRD | Records the actual stack, architecture, API contracts, auth and deployment. Don't offer stack options. Log significant existing choices as decisions with origin `existing`. |
+| 4 UX | Inventories the screens and flows that exist, with wireframes of what they look like now, and notes missing states as findings. |
+| 5 Design System | Extracts the tokens and components in use. If styling is inconsistent, record the variations as a finding rather than inventing a tidy system. |
+| 6 Schema | Records the schema from migrations and models, and lists differences between them as findings. |
+| 7 LLD | Offer it as usual; it's most useful for complex logic nobody fully remembers. |
+
+**Planning new work.** Once the relevant parts are documented, run the normal phases for the new work only, in the same documents, marking each item `existing` or `proposed`. Treat the current stack and architecture as constraints: recommend staying with them unless a requirement can't be met that way, and give changes to the schema as migrations from the current one. Requirements become the increment's scope in MVP.md, with their own build slices and estimates. The simplicity guardrails apply to what you propose; they aren't grounds for proposing a rewrite of what's there, unless the developer asks.
+
+**Traceability.** An orphan here is often real behaviour with no recorded requirement. Ask whether it's a requirement to add or something to raise as a finding; never treat it as code to cut.
+
+**No filesystem.** If the code can't be read, ask for the relevant files to be attached, and mark anything the developer tells you as `[confirmed]` rather than `[code]`.
 
 ## How to ask questions
 
@@ -137,6 +189,7 @@ Each entry records its **origin** honestly:
 - `developer` — the developer chose it without a recommendation, or chose an option Claude didn't recommend.
 - `recommendation-accepted` — Claude recommended it and the developer agreed.
 - `recommendation-overridden` — Claude recommended X, the developer chose Y. Record both and the developer's reason.
+- `existing` — already in the code when this workflow started. Record where it's visible, and give the rationale only if the developer knows it; otherwise write `Rationale: unknown` rather than inventing one.
 
 Always record the options considered and the rationale in the developer's terms. When a recommendation is accepted with a bare "ok", write the rationale Claude gave and note it was accepted without further comment — don't invent reasons the developer didn't give. The owner is always the developer: they made the call, even when they took the recommendation.
 
@@ -178,7 +231,7 @@ Update it whenever a phase changes state. Never mark something approved, or a ta
 
 ## Phase notes
 
-Short guidance on what each phase is for; the templates hold the structure.
+Short guidance on what each phase is for; the templates hold the structure. For an existing project, apply "Existing projects" on top of these notes; where they conflict, it takes precedence.
 
 **0 — Discovery.** Understand the idea before defining anything. If the developer hasn't described it yet, the first message simply asks what they want to build and what problem it solves — no technical questions. Then cover, only where it matters for this project: who uses it and roughly how many; the problem, current workaround and pain points; project type (personal, internal tool, commercial product, other); new build or extending an existing system; platforms (web, mobile, desktop, API, CLI); existing systems and integrations; timeline and budget; the developer's skills and preferred technologies; legal, regulatory, security or data requirements; maturity (prototype / MVP / production); what success looks like. One or two rounds of option questions is usually enough. The deliverable is a discovery summary separating **known facts**, **assumptions**, **constraints** and **open questions**, plus the tier. It's a gate too.
 
@@ -219,7 +272,7 @@ Choosing "no LLD" is logged as a decision (origin as usual) and the phase marked
 
 ## After the gates
 
-After Phase 6 is approved (and Phase 7, if chosen), give a short close-out: the docs produced, the count of decisions, any accepted risks, and the first build slice from MVP.md as the natural next step. Coding is outside this skill (scaffolding, implementation, testing and deployment are meant for a separate build skill that starts from these approved docs), but the build should follow MVP.md's slices. Make sure STATUS.md reads as a complete handoff before closing out.
+After Phase 6 is approved (and Phase 7, if chosen), give a short close-out: the docs produced, the count of decisions, any accepted risks, and the first build slice from MVP.md as the natural next step. Coding is outside this skill (scaffolding, implementation, testing and deployment are meant for a separate build skill that starts from these approved docs), but the build should follow MVP.md's slices. Make sure STATUS.md reads as a complete handoff before closing out. For an as-built project with no new work planned, list the open findings instead of a first build slice.
 
 When the developer returns during or after the build, the TRD moves into **expand and maintain** mode:
 

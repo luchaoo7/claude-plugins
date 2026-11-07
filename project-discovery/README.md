@@ -1,6 +1,6 @@
 # Project Discovery
 
-A Claude plugin that takes a software project from a raw idea to a set of approved planning documents you can build from — before any code is written.
+A Claude plugin that takes a software project from a raw idea to a set of approved planning documents you can build from — before any code is written. It also works on projects that already have code, documenting what exists and planning new work on top.
 
 Most projects go wrong early: vague requirements, tech choices made on vibes, a v1 that quietly grows, and nobody able to say later why something was decided. This plugin fixes that with three mechanisms:
 
@@ -67,6 +67,15 @@ Open a session in your project's repo and describe what you want to plan. The sk
 
 In Claude Code you can also start it directly with `/project-discovery:plan`.
 
+### Using it on an existing project
+
+Open a session in the repo and say something like "document this codebase" or "plan a new feature for this app". Claude reads the code first, then asks whether you want to document what exists, plan new work on it, or both.
+
+- **Same documents, same gates** — but they record the system as it is, and approving one means it's accurate.
+- **Claude only writes to `docs/`** — it doesn't change your code, and it won't overwrite existing files in `docs/` it didn't write. It doesn't open secrets or connect to live databases.
+- **Clear sources** — statements about the current system are labelled `[code]`, `[inferred]` or `[confirmed]`, and existing choices are logged with `Rationale: unknown` if nobody knows why they were made.
+- **Findings, not fixes** — problems the survey turns up, such as dead code or a documented feature that isn't built, are recorded for you to fix later or accept.
+
 ### Moving through the phases
 
 Claude asks a few questions, drafts the phase's document in `docs/`, then asks for a gate decision:
@@ -95,7 +104,7 @@ You get a short close-out covering the documents produced, the decisions made, a
 
 ## Roadmap
 
-- **v0.2** — companion build skill: scaffold, implement, test and deploy from the approved docs, following the MVP's build slices.
+- **v0.3** — companion build skill: scaffold, implement, test and deploy from the approved docs, following the MVP's build slices.
 
 ## Licence
 
